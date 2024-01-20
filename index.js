@@ -1,6 +1,6 @@
 // get express
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 // init express app
 const app = express();
@@ -21,29 +21,61 @@ const patients = [
     ],
   },
 ];
-// [HTTPGet]
+
+// [HttpGet]
+
+// Gets all patient data
 app.get("/", (req, res) => {
   res.json(patients);
 });
 
-const patientExists = (data) => {
-    for(const patient of patients) {
-        if (JSON.stringify(patient) === JSON.stringify(data)) {
-            return true;
-        }
+// Helper function
+const patientExists = (name) => {
+  for (const patient of patients) {
+    if (patient.name === name) {
+      return true;
     }
-    return false;
+  }
+  return false;
+};
+
+// [HttpPost]
+
+// Adds a patient record
+app.post("/", (req, res) => {
+  const data = req.body;
+  if (patientExists(data.name)) {
+    res.send("Patient already exists at this hospital.");
+  } else {
+    patients.push(data);
+    res.send("New patient " + data.name + " has been added.");
+  }
+});
+
+// [HttpPut]
+
+// Updates a patient's record
+const UpdateRecords = (data) => {
+  for (const patient of patients) {
+    if (patient.name === data.name) {
+      patient.age = data.age;
+      patient.kidneys = data.kidneys;
+      break;
+    }
+  }
 }
 
-app.post("/", (req, res) => {
-   const patientData = req.body;
-    if (patientExists(patientData)) {
-        res.send("Patient already exists at this hospital.")
-    } else {
-        patients.push(patientData);
-        res.send("New patient " + patientData.name + " has been added.");
-    }
-})
+app.put("/", (req, res) => {
+  const data = req.body;
+  if (patientExists(data.name)) {
+    UpdateRecords(data);
+    res.send(
+      "The database has been updated. Thank you for correcting the information."
+    );
+  } else {
+    res.send("Ah? No such patient exists. Please check the details again!");
+  }
+});
 
 // create and listen at port 3000
 app.listen(3000);
