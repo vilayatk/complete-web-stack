@@ -1,0 +1,13 @@
+// Node.js runtime
+
+Runtime to execute js code in backend
+Creating CLIs
+Create http server -> Request or use logic
+Nodejs backend
+
+
+// Basics of express
+
+Catch get, post, put and delete
+Body.msg, etc.
+Routes status codes
